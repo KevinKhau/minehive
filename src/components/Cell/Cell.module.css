@@ -1,0 +1,7 @@
+.Cell {
+    display: inline-block;
+    border: 1px solid #4f4d4d;
+    height: 40px;
+    aspect-ratio: 1/1;
+    background-color: lightgray;
+}
