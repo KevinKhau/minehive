@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/minehive/static/css/main.b3880e47.css",
+    "main.js": "/minehive/static/js/main.bdfd2f2a.js",
+    "static/js/787.3d3f0a85.chunk.js": "/minehive/static/js/787.3d3f0a85.chunk.js",
+    "index.html": "/minehive/index.html",
+    "main.b3880e47.css.map": "/minehive/static/css/main.b3880e47.css.map",
+    "main.bdfd2f2a.js.map": "/minehive/static/js/main.bdfd2f2a.js.map",
+    "787.3d3f0a85.chunk.js.map": "/minehive/static/js/787.3d3f0a85.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b3880e47.css",
+    "static/js/main.bdfd2f2a.js"
+  ]
+}
