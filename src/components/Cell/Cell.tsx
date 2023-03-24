@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {MouseEventHandler} from 'react';
 import {CellData} from "../../common/types";
 
 interface CellProps {
     value: CellData;
+    onClick: MouseEventHandler;
+    onContextMenu: MouseEventHandler;
 }
 
-const Cell = ({value}: CellProps) => {
+const Cell = ({value, onClick, onContextMenu}: CellProps) => {
 
     const getValue = () => {
-        // if (!value.isRevealed) {
-        //     return value.isFlagged ? "🚩" : null;
-        // }
+        if (!value.isRevealed) {
+            return value.isFlagged ? "🚩" : null;
+        }
         if (value.isMine) {
             return "💣";
         }
@@ -20,9 +22,13 @@ const Cell = ({value}: CellProps) => {
         return value.neighbor;
     }
 
-    const className = `cell${value.isRevealed ? "" : " /*hidden*/"}${value.isMine ? " is-mine" : ""}${value.isFlagged ? " is-flag" : ""}`
+    const className = () => 'cell' +
+        (value.isRevealed ? '' : ' hidden') +
+        (value.isMine ? ' is-mine' : '') +
+        (value.isFlagged ? ' is-flag' : '');
+
     return (
-        <div className={className}>
+        <div className={className()} onClick={onClick} onContextMenu={onContextMenu}>
             {getValue()}
         </div>
     );

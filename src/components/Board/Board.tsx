@@ -16,7 +16,7 @@ const Board = ({width, height, mines}: BoardProps) => {
 
     const [data, setData] = useState<CellData[][]>(initBoard());
     const [status, setStatus] = useState('Game in progress');
-    const [mineCount, setMineCount] = useState(mines)
+    const [mineCount, setMineCount] = useState(mines);
 
     function initBoard() {
         const boardData: CellData[][] = [];
@@ -86,10 +86,39 @@ const Board = ({width, height, mines}: BoardProps) => {
         </div>
     );
 
+    function handleCellClick(cell: CellData) {
+        if (cell.isRevealed || cell.isFlagged)    return;
+        cell.isFlagged = false;
+        cell.isRevealed = true;
+        setData(data.map(row => row));
+    }
+
+    function handleContextMenu(event: React.MouseEvent<Element, MouseEvent>, cell: CellData) {
+        event.preventDefault();
+        if (cell.isRevealed)    return;
+        toggleFlag(cell);
+    }
+
+    function toggleFlag(cell: CellData) {
+        if (cell.isFlagged) {
+            cell.isFlagged = false;
+            setMineCount(mineCount + 1);
+        } else {
+            cell.isFlagged = true;
+            setMineCount(mineCount - 1);
+        }
+
+        setData(data.map(row => row));
+    }
+
     function renderBoard() {
         return data.map(row =>
             row.map(item =>
-                <Cell key={item.x * row.length + item.y} value={item}/>
+                <Cell key={item.x * row.length + item.y}
+                      value={item}
+                      onClick={() => handleCellClick(item)}
+                      onContextMenu={(event) => handleContextMenu(event, item)}
+                />
             ).concat(<div key={'joint' + row} className='clear'/>));
     }
 }
