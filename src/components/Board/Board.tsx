@@ -110,7 +110,8 @@ const Board = ({width, height, mines}: BoardProps) => {
 
     function revealMine(cell: CellData) {
         if (!cell.isMine) return;
-        alert("mine");
+        setMineCount(mineCount - 1);
+        setMistakes(mistakes + 1);
     }
 
     function handleContextMenu(event: React.MouseEvent<Element, MouseEvent>, cell: CellData) {
