@@ -1,13 +1,8 @@
-import React, {useCallback, useEffect, useImperativeHandle, useState} from 'react';
-import styles from './Cell.module.css';
-
-export const enum Symbol {
-    Clear = '.',
-    Mine = 'x'
-}
+import React from 'react';
+import {CellData} from "../../common/types";
 
 interface CellProps {
-    value?: any;
+    value: CellData;
 }
 
 const Cell = ({value}: CellProps) => {
@@ -16,7 +11,7 @@ const Cell = ({value}: CellProps) => {
         // if (!value.isRevealed) {
         //     return value.isFlagged ? "🚩" : null;
         // }
-        if (!!value.isMine) {
+        if (value.isMine) {
             return "💣";
         }
         if (value.neighbor === 0) {
