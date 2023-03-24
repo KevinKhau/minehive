@@ -23,6 +23,8 @@ const Board = ({width, height, mines}: BoardProps) => {
         initEmptyBoard();
         setMines();
         setNeighbors();
+        setEmpty();
+
         return boardData;
 
         function initEmptyBoard() {
@@ -55,25 +57,32 @@ const Board = ({width, height, mines}: BoardProps) => {
         function setNeighbors() {
             for (const row of boardData)
                 for (const cell of row)
-                    if (cell.isMine)
-                        increaseNeighbors(cell);
+                    increaseMineNeighbors(cell);
         }
 
-        function increaseNeighbors(cell: CellData) {
+        function increaseMineNeighbors(cell: CellData) {
+            if (!cell.isMine) return;
             for (const [x, y] of eightDirections)
                 if (inRange(cell, x, y))
                     boardData[cell.y + y][cell.x + x].neighbor++;
         }
 
-        function inRange(cell: CellData, x: number, y: number) {
-            return !outOfRange(cell, x, y);
+        function setEmpty() {
+            for (const row of boardData) {
+                row.filter(cell => cell.neighbor === 0 && !cell.isMine)
+                    .forEach(cell => cell.isEmpty = true);
+            }
         }
 
-        function outOfRange(cell: CellData, x: number, y: number) {
-            return ((x === -1 && cell.x === 0) || (x === 1 && cell.x >= width - 1)) ||
-                ((y === -1 && cell.y === 0) || (y === 1 && cell.y >= height - 1));
-        }
+    }
 
+    function inRange(cell: CellData, x: number, y: number) {
+        return !outOfRange(cell, x, y);
+    }
+
+    function outOfRange(cell: CellData, x: number, y: number) {
+        return ((x === -1 && cell.x === 0) || (x === 1 && cell.x >= width - 1)) ||
+            ((y === -1 && cell.y === 0) || (y === 1 && cell.y >= height - 1));
     }
 
     return (
@@ -87,15 +96,35 @@ const Board = ({width, height, mines}: BoardProps) => {
     );
 
     function handleCellClick(cell: CellData) {
-        if (cell.isRevealed || cell.isFlagged)    return;
-        cell.isFlagged = false;
-        cell.isRevealed = true;
+        if (cell.isRevealed || cell.isFlagged) return;
+        reveal(cell);
         setData(data.map(row => row));
+    }
+
+    function reveal(cell: CellData) {
+        if (cell.isRevealed) return;
+        cell.isRevealed = true;
+        revealEmpty(cell);
+        revealMine(cell);
+    }
+
+    function revealEmpty(cell: CellData) {
+        if (!cell.isRevealed || !cell.isEmpty) return;
+        for (const [x, y] of eightDirections) {
+            if (inRange(cell, x, y)) {
+                reveal(data[cell.y + y][cell.x + x]);
+            }
+        }
+    }
+
+    function revealMine(cell: CellData) {
+        if (!cell.isMine) return;
+        alert("mine");
     }
 
     function handleContextMenu(event: React.MouseEvent<Element, MouseEvent>, cell: CellData) {
         event.preventDefault();
-        if (cell.isRevealed)    return;
+        if (cell.isRevealed) return;
         toggleFlag(cell);
     }
 
