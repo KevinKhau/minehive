@@ -17,6 +17,7 @@ const Board = ({width, height, mines}: BoardProps) => {
     const [data, setData] = useState<CellData[][]>(initBoard());
     const [status, setStatus] = useState('Game in progress');
     const [mineCount, setMineCount] = useState(mines);
+    const [mistakes, setMistakes] = useState(0);
 
     function initBoard() {
         const boardData: CellData[][] = [];
@@ -85,16 +86,6 @@ const Board = ({width, height, mines}: BoardProps) => {
             ((y === -1 && cell.y === 0) || (y === 1 && cell.y >= height - 1));
     }
 
-    return (
-        <div className={styles.Board}>
-            <div className="game-info">
-                <h1 className="info">{status}</h1>
-                <span className="info">Mines remaining: {mineCount}</span>
-            </div>
-            {renderBoard()}
-        </div>
-    );
-
     function handleCellClick(cell: CellData) {
         if (cell.isRevealed || cell.isFlagged) return;
         reveal(cell);
@@ -150,6 +141,17 @@ const Board = ({width, height, mines}: BoardProps) => {
                 />
             ).concat(<div key={'joint' + row} className='clear'/>));
     }
+
+    return (
+        <div className={styles.Board}>
+            <div className="game-info">
+                <h1 className="info">{status}</h1>
+                <div className="info">Mines remaining: {mineCount}</div>
+                <div className="info">Mistakes: {mistakes}</div>
+            </div>
+            {renderBoard()}
+        </div>
+    );
 }
 
 Board.defaultProps = {
