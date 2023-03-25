@@ -56,9 +56,8 @@ const Board = ({width, height, mines}: BoardProps) => {
         }
 
         function setNeighbors() {
-            for (const row of boardData)
-                for (const cell of row)
-                    increaseMineNeighbors(cell);
+            for (const cell of boardData.flat())
+                increaseMineNeighbors(cell);
         }
 
         function increaseMineNeighbors(cell: CellData) {
@@ -69,10 +68,9 @@ const Board = ({width, height, mines}: BoardProps) => {
         }
 
         function setEmpty() {
-            for (const row of boardData) {
-                row.filter(cell => cell.neighbor === 0 && !cell.isMine)
-                    .forEach(cell => cell.isEmpty = true);
-            }
+            boardData.flat()
+                .filter(cell => cell.neighbor === 0 && !cell.isMine)
+                .forEach(cell => cell.isEmpty = true);
         }
 
     }
