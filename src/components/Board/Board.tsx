@@ -25,7 +25,6 @@ const Board = ({width, height, mines}: BoardProps) => {
         setMines();
         setNeighbors();
         setEmpty();
-
         return boardData;
 
         function initEmptyBoard() {
@@ -136,13 +135,8 @@ const Board = ({width, height, mines}: BoardProps) => {
     }
 
     function toggleFlag(cell: CellData) {
-        if (cell.isFlagged) {
-            cell.isFlagged = false;
-            setMineCount(mineCount + 1);
-        } else {
-            cell.isFlagged = true;
-            setMineCount(mineCount - 1);
-        }
+        setMineCount(mineCount + (cell.isFlagged ? 1 : -1));
+        cell.isFlagged = !cell.isFlagged;
     }
 
     function refreshBoard() {
