@@ -89,12 +89,14 @@ const Board = ({width, height, mines}: BoardProps) => {
     function handleCellClick(cell: CellData) {
         if (cell.isRevealed || cell.isFlagged) return;
         reveal(cell);
-        setData(data.map(row => row));
+        setEnd();
+        refreshBoard();
     }
 
     function reveal(cell: CellData) {
         if (cell.isRevealed) return;
         cell.isRevealed = true;
+        cell.isFlagged = false;
         revealEmpty(cell);
         revealMine(cell);
     }
@@ -114,10 +116,25 @@ const Board = ({width, height, mines}: BoardProps) => {
         setMistakes(mistakes + 1);
     }
 
+    function setEnd() {
+        const end = data.flat().filter(cell => !cell.isMine).every(cell => cell.isRevealed);
+        if (!end) return;
+        if (mistakes >= mines / 2)
+            setStatus('You need training...');
+        else
+            setStatus(!mistakes ? 'Full victory, congratulations!' : 'Game finished!');
+        revealBoard();
+    }
+
+    function revealBoard() {
+        data.flat().forEach(cell => cell.isRevealed = true);
+    }
+
     function handleContextMenu(event: React.MouseEvent<Element, MouseEvent>, cell: CellData) {
         event.preventDefault();
         if (cell.isRevealed) return;
         toggleFlag(cell);
+        refreshBoard();
     }
 
     function toggleFlag(cell: CellData) {
@@ -128,7 +145,9 @@ const Board = ({width, height, mines}: BoardProps) => {
             cell.isFlagged = true;
             setMineCount(mineCount - 1);
         }
+    }
 
+    function refreshBoard() {
         setData(data.map(row => row));
     }
 
@@ -145,12 +164,14 @@ const Board = ({width, height, mines}: BoardProps) => {
 
     return (
         <div className={styles.Board}>
-            <div className="game-info">
-                <h1 className="info">{status}</h1>
-                <div className="info">Mines remaining: {mineCount}</div>
-                <div className="info">Mistakes: {mistakes}</div>
+            <div className='game-info'>
+                <h1 className='info'>{status}</h1>
+                <div className='info'>Mines remaining: {mineCount}</div>
+                <div className='info'>Mistakes: {mistakes}</div>
             </div>
-            {renderBoard()}
+            <div>
+                {renderBoard()}
+            </div>
         </div>
     );
 }
