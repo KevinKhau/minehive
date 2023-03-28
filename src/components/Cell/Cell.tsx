@@ -18,7 +18,7 @@ const Cell = ({value, onClick, onContextMenu}: CellProps) => {
 
     const className = 'cell' +
         (value.isRevealed ? '' : ' hidden') +
-        (value.isMine ? ' is-mine' : '') +
+        (value.isRevealed && value.isMine ? ' is-mine' : '') +
         (value.isFlagged ? ' is-flag' : '');
 
     return (
